@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 const englishHelloPrefix = "Hello"
+const frenchHelloPrefix = "Bonjour"
 const spanishHelloPrefix = "Hola"
 
 func Hello(name, language string) string {
@@ -16,6 +17,8 @@ func Hello(name, language string) string {
 	switch language {
 	case "English":
 		prefix = englishHelloPrefix
+	case "French":
+		prefix = frenchHelloPrefix
 	case "Spanish":
 		prefix = spanishHelloPrefix
 	default:
