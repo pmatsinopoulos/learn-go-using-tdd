@@ -1,6 +1,6 @@
 package main
 
-func Area(height, width float64) (area float64) {
-	area = height * width
+func Area(rectangle Rectangle) (area float64) {
+	area = rectangle.height * rectangle.width
 	return
 }
