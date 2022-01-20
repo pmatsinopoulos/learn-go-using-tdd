@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestArea(t *testing.T) {
 	t.Run("square case", func(t *testing.T) {
@@ -18,6 +21,19 @@ func TestArea(t *testing.T) {
 		want := 72.0
 		if got != want {
 			t.Errorf("Expected: %v, actual: %v", want, got)
+		}
+	})
+
+	t.Run("circle case", func(t *testing.T) {
+		circle := Circle{radius: 1.5}
+		got := Area(circle)
+		want := 7.06858
+
+		gotStr := fmt.Sprintf("%.5f", got)
+		wantStr := fmt.Sprintf("%.5f", want)
+
+		if gotStr != wantStr {
+			t.Errorf("Expected %v, got %v", want, got)
 		}
 	})
 }

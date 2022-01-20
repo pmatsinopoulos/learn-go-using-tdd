@@ -1,6 +1,6 @@
 package main
 
-func Area(rectangle Rectangle) (area float64) {
-	area = rectangle.height * rectangle.width
+func Area(shape Shape) (area float64) {
+	area = shape.Area()
 	return
 }
