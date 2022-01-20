@@ -3,10 +3,17 @@ package main
 import "testing"
 
 func TestSum(t *testing.T) {
-	arrayOfIntegers := [4]int{1, 2, 3, 4}
-	got := Sum(arrayOfIntegers)
-	want := 10
-	if got != want {
-		t.Errorf("Expected %v, got %v", want, got)
+	assertResults := func(got int, want int) {
+		t.Helper()
+		if got != want {
+			t.Errorf("Expected %v, got %v", want, got)
+		}
 	}
+
+	t.Run("collection of any size", func(t *testing.T) {
+		arrayOfIntegers := []int{8, 3}
+		got := Sum(arrayOfIntegers)
+		want := 11
+		assertResults(got, want)
+	})
 }
