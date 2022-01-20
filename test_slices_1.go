@@ -12,10 +12,10 @@ func main() {
 	// but they are different
 
 	y[1] = "Panos"
-	fmt.Println("x = %v", x) // expect "foo", "Panos", "mary"
+	fmt.Printf("x = %v\n", x) // expect "foo", "Panos", "mary"
 
-	fmt.Println("y = %v", y) // expect "foo", "Panos", "mary"
+	fmt.Printf("y = %v\n", y) // expect "foo", "Panos", "mary"
 
-	fmt.Println("z = %v", z) // expect "foo", "bar", "mary"
+	fmt.Printf("z = %v\n", z) // expect "foo", "bar", "mary"
 
 }
