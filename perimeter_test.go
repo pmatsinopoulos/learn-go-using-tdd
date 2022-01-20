@@ -4,7 +4,8 @@ import "testing"
 
 func TestPerimeter(t *testing.T) {
 	t.Run("square case", func(t *testing.T) {
-		got := Perimeter(10.0, 10.0)
+		square := Rectangle{height: 10.0, width: 10.0}
+		got := Perimeter(square)
 		want := 40.0
 
 		if got != want {
@@ -13,7 +14,8 @@ func TestPerimeter(t *testing.T) {
 	})
 
 	t.Run("rectangle case", func(t *testing.T) {
-		got := Perimeter(12.0, 10.0)
+		rectangle := Rectangle{height: 12.0, width: 10.0}
+		got := Perimeter(rectangle)
 		want := 44.0
 
 		if got != want {
