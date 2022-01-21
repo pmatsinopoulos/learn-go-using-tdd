@@ -1,6 +1,9 @@
 package main
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type Dictionary struct {
 	dict map[string]string
@@ -19,6 +22,17 @@ func (dict Dictionary) Add(word, explanation string) (err error) {
 		return errors.New("word already present in dictionary")
 	}
 
+	dict.dict[word] = explanation
+	err = nil
+	return
+}
+
+func (dict Dictionary) Update(word, explanation string) (err error) {
+	_, searchError := dict.Search(word)
+	if searchError != nil {
+		err = errors.New(fmt.Sprintf("word: %q does not exist in the dictionary", word))
+		return
+	}
 	dict.dict[word] = explanation
 	err = nil
 	return

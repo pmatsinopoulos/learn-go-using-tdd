@@ -59,4 +59,20 @@ func TestDictionary(t *testing.T) {
 			assertStrings(t, got, originalValue)
 		})
 	})
+
+	t.Run("#Update", func(t *testing.T) {
+		t.Run("existing word", func(t *testing.T) {
+			_, err := dictionary.Search("test")
+			if err != nil {
+				panic("'test' should be present in the dictionary for this test to run")
+			}
+
+			err = dictionary.Update("test", "new value")
+
+			got, err := dictionary.Search("test")
+			want := "new value"
+
+			assertStrings(t, got, want)
+		})
+	})
 }
