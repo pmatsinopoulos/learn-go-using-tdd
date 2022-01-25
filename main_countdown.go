@@ -1,7 +1,16 @@
 package main
 
-import "os"
+import (
+	"os"
+	"time"
+)
+
+type DefaultSleeper struct{}
+
+func (d *DefaultSleeper) Sleep() {
+	time.Sleep(1 * time.Second)
+}
 
 func main() {
-	Countdown(os.Stdout)
+	Countdown(os.Stdout, &DefaultSleeper{})
 }
