@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func main_() {
 	x := [3]string{"foo", "bar", "mary"}
 
 	y := x[:] // slice on array x
