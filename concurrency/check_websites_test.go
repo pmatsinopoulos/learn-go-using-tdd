@@ -1,48 +1,32 @@
 package concurrency
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
-var StubWebsiteCheckerFalse = func(_ string) bool {
-	return false
-}
-
-var StubWebsiteCheckerTrue = func(_ string) bool {
+func mockWebsiteChecker(url string) bool {
+	if url == "waat://furhurterwe.geds" {
+		return false
+	}
 	return true
 }
 
 func TestCheckWebsites(t *testing.T) {
-	equalMaps := func(t *testing.T, want map[string]bool, got map[string]bool) {
-		t.Helper()
-		equalMaps := func(a map[string]bool, b map[string]bool) bool {
-			for k, _ := range a {
-				valueInB, ok := b[k]
-				if !ok || valueInB != a[k] {
-					return false
-				}
-			}
-			return true
-		}
-
-		if len(want) != len(got) || !equalMaps(want, got) {
-			t.Errorf("Expected %v, got %v", want, got)
-		}
+	websites := []string{
+		"http://google.com",
+		"http://blog.gypsydave5.com",
+		"waat://furhurterwe.geds",
 	}
 
-	t.Run("when WebsiteChecker returns false", func(t *testing.T) {
-		t.Run("it adds the url as false in the results", func(t *testing.T) {
-			urls := []string{"https://www.google.com"}
-			got := CheckWebsites(StubWebsiteCheckerFalse, urls)
-			want := map[string]bool{"https://www.google.com": false}
-			equalMaps(t, want, got)
-		})
-	})
+	want := map[string]bool{
+		"http://google.com":          true,
+		"http://blog.gypsydave5.com": true,
+		"waat://furhurterwe.geds":    false,
+	}
 
-	t.Run("when WebsiteChecker returns true", func(t *testing.T) {
-		t.Run("it adds the url as true in the results", func(t *testing.T) {
-			urls := []string{"https://www.google.com"}
-			got := CheckWebsites(StubWebsiteCheckerTrue, urls)
-			want := map[string]bool{"https://www.google.com": true}
-			equalMaps(t, want, got)
-		})
-	})
+	got := CheckWebsites(mockWebsiteChecker, websites)
+	if !reflect.DeepEqual(want, got) {
+		t.Fatalf("Wanted %v, got %v", want, got)
+	}
 }
