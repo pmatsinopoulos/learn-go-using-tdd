@@ -14,13 +14,19 @@ func reflectValue(i interface{}) reflect.Value {
 
 func walk(x interface{}, walkerFunc walkerFuncT) {
 	val := reflectValue(x)
-	for i := 0; i < val.NumField(); i++ {
-		field := val.Field(i)
-		switch field.Kind() {
-		case reflect.String:
-			walkerFunc(field.String())
-		case reflect.Struct:
-			walk(field.Interface(), walkerFunc)
+	if val.Kind() == reflect.Slice {
+		for i := 0; i < val.Len(); i++ {
+			walk(val.Index(i).Interface(), walkerFunc)
+		}
+	} else {
+		for i := 0; i < val.NumField(); i++ {
+			field := val.Field(i)
+			switch field.Kind() {
+			case reflect.String:
+				walkerFunc(field.String())
+			case reflect.Struct:
+				walk(field.Interface(), walkerFunc)
+			}
 		}
 	}
 }

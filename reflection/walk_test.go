@@ -54,6 +54,14 @@ func TestWalk(t *testing.T) {
 			Input:         &Person{Name: "Chris", Profile: Profile{Age: 52, City: "London"}},
 			ExpectedCalls: []string{"Chris", "London"},
 		},
+		{
+			Name: "Slices",
+			Input: []Profile{
+				{Age: 33, City: "London"},
+				{Age: 34, City: "Paris"},
+			},
+			ExpectedCalls: []string{"London", "Paris"},
+		},
 	}
 	for _, testCase := range cases {
 		t.Run(testCase.Name, func(t *testing.T) {
