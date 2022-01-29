@@ -1,12 +1,7 @@
 package main
 
-import (
-	"log"
-	"net/http"
-	"os"
-)
+import "hello/hash_tutorial"
 
-func main__() {
-	Greet(os.Stdout, "Elodie\n")
-	log.Fatal(http.ListenAndServe(":5000", http.HandlerFunc(MyGreeterHandler)))
+func main() {
+	hash_tutorial.Tutorial()
 }
