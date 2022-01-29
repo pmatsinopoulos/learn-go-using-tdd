@@ -1,6 +1,9 @@
 package sync_tutorial
 
-import "testing"
+import (
+	"sync"
+	"testing"
+)
 
 func TestCounter(t *testing.T) {
 	assertCounter := func(t testing.TB, counter Counter, numberOfIncrements int) {
@@ -25,6 +28,23 @@ func TestCounter(t *testing.T) {
 		for i := 0; i < numberOfTimesToIncrement; i++ {
 			counter.Inc()
 		}
+
+		assertCounter(t, counter, numberOfTimesToIncrement)
+	})
+
+	t.Run("it runs safely concurrently", func(t *testing.T) {
+		counter := Counter{}
+		numberOfTimesToIncrement := 1000
+		wg := sync.WaitGroup{}
+		wg.Add(numberOfTimesToIncrement)
+
+		for i := 0; i < numberOfTimesToIncrement; i++ {
+			go func(wg *sync.WaitGroup) {
+				defer wg.Done()
+				counter.Inc()
+			}(&wg)
+		}
+		wg.Wait()
 
 		assertCounter(t, counter, numberOfTimesToIncrement)
 	})
