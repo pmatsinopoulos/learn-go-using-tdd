@@ -2,6 +2,7 @@ package blogposts_test
 
 import (
 	"githug.com/pmatsinopoulos/blogposts"
+	"reflect"
 	"testing"
 	"testing/fstest"
 )
@@ -15,14 +16,17 @@ func TestNewBlogPosts(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	assertPost := func(t *testing.T, got blogposts.Post, want blogposts.Post) {
+		t.Helper()
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %+v, want %+v", got, want)
+		}
+	}
 	t.Run("it creates the correct number of posts", func(t *testing.T) {
 		if len(posts) != len(fs) {
 			t.Errorf("got %d posts, wanted %d posts", len(posts), len(fs))
 		}
 	})
-	t.Run("each post has the correct title", func(t *testing.T) {
-		if posts[0].Title != "Post 1" {
-			t.Errorf("Post does not have the expected title. Expected %q, got %q", "Post 1", posts[0].Title)
-		}
-	})
+	assertPost(t, posts[0], blogposts.Post{Title: "Post 1"})
+	assertPost(t, posts[1], blogposts.Post{Title: "Post 2"})
 }
