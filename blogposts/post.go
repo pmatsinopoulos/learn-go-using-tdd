@@ -9,25 +9,30 @@ import (
 type Post struct {
 	Description string
 	Title       string
+	Tags        []string
 }
 
 const (
 	titleSeparator       = "Title: "
 	descriptionSeparator = "Description: "
+	tagsSeparator        = "Tags: "
 )
 
 func newPost(postFile io.Reader) (Post, error) {
 	scanner := bufio.NewScanner(postFile)
-	readLine := func(tagName string) string {
+	readMetaLine := func(tagName string) string {
 		scanner.Scan()
 		return strings.TrimPrefix(scanner.Text(), tagName)
 	}
-	title := readLine(titleSeparator)
-	description := readLine(descriptionSeparator)
+	title := readMetaLine(titleSeparator)
+	description := readMetaLine(descriptionSeparator)
+	tags := readMetaLine(tagsSeparator)
+	tagsArray := strings.Split(tags, ", ")
 
 	post := Post{
 		Description: description,
 		Title:       title,
+		Tags:        tagsArray,
 	}
 	return post, nil
 
