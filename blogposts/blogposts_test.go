@@ -11,10 +11,17 @@ func TestNewBlogPosts(t *testing.T) {
 	const (
 		firstBody = `Title: Post 1
 Description: Description 1
-Tags: tag1, tag2`
+Tags: tag1, tag2
+---
+Hello
+World`
 		secondBody = `Title: Post 2
 Description: Description 2
-Tags: tag2, tag3`
+Tags: tag2, tag3
+---
+B
+L
+M`
 	)
 	fs := fstest.MapFS{
 		"hello_world.md":  {Data: []byte(firstBody)},
@@ -35,6 +42,9 @@ Tags: tag2, tag3`
 			t.Errorf("got %d posts, wanted %d posts", len(posts), len(fs))
 		}
 	})
-	assertPost(t, posts[0], blogposts.Post{Title: "Post 1", Description: "Description 1", Tags: []string{"tag1", "tag2"}})
-	assertPost(t, posts[1], blogposts.Post{Title: "Post 2", Description: "Description 2", Tags: []string{"tag2", "tag3"}})
+	assertPost(t, posts[0], blogposts.Post{Title: "Post 1", Description: "Description 1", Tags: []string{"tag1", "tag2"}, Body: `Hello
+World`})
+	assertPost(t, posts[1], blogposts.Post{Title: "Post 2", Description: "Description 2", Tags: []string{"tag2", "tag3"}, Body: `B
+L
+M`})
 }
