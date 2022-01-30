@@ -34,11 +34,7 @@ func newPost(postFile io.Reader) (Post, error) {
 
 	scanner.Scan() // ignore this line
 
-	buf := bytes.Buffer{}
-	for scanner.Scan() {
-		fmt.Fprintln(&buf, scanner.Text())
-	}
-	body := strings.TrimSuffix(buf.String(), "\n")
+	body := readBody(scanner)
 
 	post := Post{
 		Description: description,
@@ -47,5 +43,12 @@ func newPost(postFile io.Reader) (Post, error) {
 		Body:        body,
 	}
 	return post, nil
+}
 
+func readBody(scanner *bufio.Scanner) string {
+	buf := bytes.Buffer{}
+	for scanner.Scan() {
+		fmt.Fprintln(&buf, scanner.Text())
+	}
+	return strings.TrimSuffix(buf.String(), "\n")
 }
