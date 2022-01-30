@@ -15,6 +15,10 @@ type Post struct {
 	Body        string
 }
 
+func (p Post) String() string {
+	return fmt.Sprintf("Title: %s\nDescription: %s\nTags: %v\n---\n%s\n", p.Title, p.Description, p.Tags, p.Body)
+}
+
 const (
 	titleSeparator       = "Title: "
 	descriptionSeparator = "Description: "

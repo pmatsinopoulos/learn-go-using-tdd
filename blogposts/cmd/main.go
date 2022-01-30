@@ -11,5 +11,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(posts)
+	for _, post := range posts {
+		log.Println(post)
+	}
 }
