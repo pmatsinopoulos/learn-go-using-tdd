@@ -28,6 +28,10 @@ func TestRomanNumerals(t *testing.T) {
 		19: "XIX",
 		20: "XX",
 		39: "XXXIX",
+		40: "XL",
+		47: "XLVII",
+		49: "XLIX",
+		50: "L",
 	}
 	for arabicNumber, romanNumber := range testCases {
 		testName := fmt.Sprintf("%d gets converted to %q", arabicNumber, romanNumber)
