@@ -12,8 +12,12 @@ import (
 func Render(buf *bytes.Buffer, post models.Post) (err error) {
 	template := `<h1>%s</h1>
 <p>%s</p>
-Tags: <ul><li>%s</li><li>%s</li></ul>`
-	_, err = fmt.Fprintf(buf, template, post.Title, post.Description, post.Tags[0], post.Tags[1])
+Tags: <ul>`
+	for _, tag := range post.Tags {
+		template = fmt.Sprintf("%s<li>%s</li>", template, tag)
+	}
+	template = fmt.Sprintf("%s</ul>", template)
+	_, err = fmt.Fprintf(buf, template, post.Title, post.Description)
 
 	return err
 }
