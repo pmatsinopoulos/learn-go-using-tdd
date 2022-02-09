@@ -17,7 +17,7 @@ var (
 
 func Render(buf *bytes.Buffer, post models.Post) (err error) {
 	var parsed *template.Template
-	parsed, err = template.ParseFS(postTemplates, "templates/*.go.html")
+	parsed, err = template.ParseFS(postTemplates, "templates/*.gohtml")
 	if err != nil {
 		return err
 	}
