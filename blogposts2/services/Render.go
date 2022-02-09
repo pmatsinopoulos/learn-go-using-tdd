@@ -2,22 +2,24 @@ package services
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/pmatsinopoulos/blogposts2/models"
+	"html/template"
 )
 
 // Writes data to the buffer. The data should be the HTML representation
 // of the +Post+
 
 func Render(buf *bytes.Buffer, post models.Post) (err error) {
-	template := `<h1>%s</h1>
-<p>%s</p>
-Tags: <ul>`
-	for _, tag := range post.Tags {
-		template = fmt.Sprintf("%s<li>%s</li>", template, tag)
+	templateStr := `<h1>{{.Title}}</h1>
+<p>{{.Description}}</p>
+Tags: <ul>{{range .Tags}}<li>{{.}}</li>{{end}}</ul>`
+
+	var parsed *template.Template
+	parsed, err = template.New("blog").Parse(templateStr)
+	if err != nil {
+		return err
 	}
-	template = fmt.Sprintf("%s</ul>", template)
-	_, err = fmt.Fprintf(buf, template, post.Title, post.Description)
+	err = parsed.Execute(buf, post)
 
 	return err
 }
