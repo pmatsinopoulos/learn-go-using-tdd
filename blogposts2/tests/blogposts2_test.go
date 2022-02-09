@@ -2,6 +2,7 @@ package tests
 
 import (
 	"bytes"
+	approvals "github.com/approvals/go-approval-tests"
 	"github.com/pmatsinopoulos/blogposts2/models"
 	"github.com/pmatsinopoulos/blogposts2/services"
 	"testing"
@@ -24,14 +25,6 @@ func TestRenderer(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		got := buf.String()
-		want := `<h1>hello world</h1>
-<p>This is a description</p>
-Tags: <ul><li>go</li><li>tdd</li></ul>
-`
-
-		if got != want {
-			t.Errorf("Expected %q, got %q", want, got)
-		}
+		approvals.VerifyString(t, buf.String())
 	})
 }
