@@ -46,8 +46,7 @@ func TestRenderer(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := `
-<ol>
+		want := `<ol>
   <li><a href="/post/hello-world">Hello World</a></li>
   <li><a href="/post/hello-world-2">Hello World 2</a></li>
 </ol>
