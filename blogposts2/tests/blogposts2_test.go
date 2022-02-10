@@ -33,6 +33,29 @@ func TestRenderer(t *testing.T) {
 
 		approvals.VerifyString(t, buf.String())
 	})
+
+	t.Run("it renders an index of products", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		posts := []models.Post{
+			{Title: "Hello World"},
+			{Title: "Hello World 2"},
+		}
+
+		if err := postRenderer.RenderIndex(&buf, posts); err != nil {
+			t.Fatal(err)
+		}
+
+		got := buf.String()
+		want := `
+<ol>
+  <li><a href="/post/hello-world">Hello World</a></li>
+  <li><a href="/post/hello-world-2">Hello World 2</a></li>
+</ol>
+`
+		if got != want {
+			t.Errorf("got \n%q, want\n%q", got, want)
+		}
+	})
 }
 
 func BenchmarkRender(b *testing.B) {
@@ -55,4 +78,3 @@ func BenchmarkRender(b *testing.B) {
 		postRenderer.Render(io.Discard, aPost)
 	}
 }
-
