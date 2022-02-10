@@ -10,21 +10,21 @@ import (
 )
 
 func TestRenderer(t *testing.T) {
-	var (
-		aPost = models.Post{
-			Title:       "hello world",
-			Body:        "This is a post",
-			Description: "This is a description",
-			Tags:        []string{"go", "tdd"},
-		}
-	)
-
 	postRenderer, err := services.NewPostRenderer()
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Run("it converts a single post into HTML", func(t *testing.T) {
+		var (
+			aPost = models.Post{
+				Title:       "hello world",
+				Body:        "This is a post",
+				Description: "This is a description",
+				Tags:        []string{"go", "tdd"},
+			}
+		)
+
 		buf := bytes.Buffer{}
 		err := postRenderer.Render(&buf, aPost)
 		if err != nil {
@@ -55,3 +55,4 @@ func BenchmarkRender(b *testing.B) {
 		postRenderer.Render(io.Discard, aPost)
 	}
 }
+
