@@ -17,15 +17,15 @@ func (s StubPlayerStore) GetPlayerScore(name string) int {
 }
 
 func TestGETPlayers(t *testing.T) {
+	store := StubPlayerStore{scores: map[string]int{
+		"Pepper": 20,
+		"Floyd":  10,
+	}}
+	server := v1.PlayerServer{PlayerStore: store}
+
 	t.Run("returns Pepper's score", func(t *testing.T) {
 		request := newGetScoreRequest("Pepper")
 		response := httptest.NewRecorder()
-		store := StubPlayerStore{scores: map[string]int{
-			"Pepper": 20,
-			"Floyd":  10,
-		}}
-
-		server := v1.PlayerServer{PlayerStore: store}
 
 		server.ServeHTTP(response, request)
 
@@ -35,12 +35,6 @@ func TestGETPlayers(t *testing.T) {
 	t.Run("returns Floyd's score", func(t *testing.T) {
 		request := newGetScoreRequest("Floyd")
 		response := httptest.NewRecorder()
-
-		store := StubPlayerStore{scores: map[string]int{
-			"Pepper": 20,
-			"Floyd":  10,
-		}}
-		server := v1.PlayerServer{PlayerStore: store}
 
 		server.ServeHTTP(response, request)
 
