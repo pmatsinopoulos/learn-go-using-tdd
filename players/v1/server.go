@@ -20,14 +20,14 @@ func (p PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p PlayerServer) handlePOST(w http.ResponseWriter, r *http.Request) {
-	player := strings.TrimPrefix(r.URL.Path, "/players/")
+	player := playerName(r)
 
 	w.WriteHeader(http.StatusAccepted)
 	p.PlayerStore.RecordWin(player)
 }
 
 func (p PlayerServer) handleGET(w http.ResponseWriter, r *http.Request) {
-	player := strings.TrimPrefix(r.URL.Path, "/players/")
+	player := playerName(r)
 
 	score := p.PlayerStore.GetPlayerScore(player)
 	if score == 0 {
@@ -37,4 +37,10 @@ func (p PlayerServer) handleGET(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprint(w, score)
+}
+
+func playerName(r *http.Request) (player string) {
+	player = strings.TrimPrefix(r.URL.Path, "/players/")
+
+	return
 }
