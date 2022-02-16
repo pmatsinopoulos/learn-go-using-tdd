@@ -13,14 +13,17 @@ type PlayerServer struct {
 func (p PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		p.handlePOST(w)
+		p.handlePOST(w, r)
 	case http.MethodGet:
 		p.handleGET(w, r)
 	}
 }
 
-func (p PlayerServer) handlePOST(w http.ResponseWriter) {
+func (p PlayerServer) handlePOST(w http.ResponseWriter, r *http.Request) {
+	player := strings.TrimPrefix(r.URL.Path, "/players/")
+
 	w.WriteHeader(http.StatusAccepted)
+	p.PlayerStore.RecordWin(player)
 }
 
 func (p PlayerServer) handleGET(w http.ResponseWriter, r *http.Request) {
