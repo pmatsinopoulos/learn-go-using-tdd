@@ -27,9 +27,21 @@ func (p PlayerServer) handlePOST(w http.ResponseWriter, r *http.Request) {
 	p.PlayerStore.RecordWin(player)
 }
 
+type allowedPath string
+
+func (ap allowedPath) String() string {
+	switch ap {
+	case league:
+		return "/league"
+	case playersIndividualPlayer:
+		return "/players/"
+	}
+	return "unknown"
+}
+
 const (
-	league                  string = "/league"
-	playersIndividualPlayer        = "/players/"
+	league                  allowedPath = "/league"
+	playersIndividualPlayer allowedPath = "/players/"
 )
 
 func path(r *http.Request) string {
@@ -37,7 +49,7 @@ func path(r *http.Request) string {
 }
 
 func (p PlayerServer) handleGET(w http.ResponseWriter, r *http.Request) {
-	if match, _ := regexp.MatchString(playersIndividualPlayer, path(r)); match {
+	if match, _ := regexp.MatchString(string(playersIndividualPlayer), path(r)); match {
 		player := playerName(r)
 
 		score := p.PlayerStore.GetPlayerScore(player)
@@ -48,7 +60,7 @@ func (p PlayerServer) handleGET(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Fprint(w, score)
-	} else if match, _ := regexp.MatchString(league, path(r)); match {
+	} else if match, _ := regexp.MatchString(string(league), path(r)); match {
 		w.WriteHeader(http.StatusOK)
 	}
 
