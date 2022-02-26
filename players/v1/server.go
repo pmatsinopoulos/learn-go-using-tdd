@@ -3,6 +3,7 @@ package v1
 import (
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -26,17 +27,31 @@ func (p PlayerServer) handlePOST(w http.ResponseWriter, r *http.Request) {
 	p.PlayerStore.RecordWin(player)
 }
 
-func (p PlayerServer) handleGET(w http.ResponseWriter, r *http.Request) {
-	player := playerName(r)
+const (
+	league                  string = "/league"
+	playersIndividualPlayer        = "/players/"
+)
 
-	score := p.PlayerStore.GetPlayerScore(player)
-	if score == 0 {
-		w.WriteHeader(http.StatusNotFound)
-	} else {
+func path(r *http.Request) string {
+	return r.URL.Path
+}
+
+func (p PlayerServer) handleGET(w http.ResponseWriter, r *http.Request) {
+	if match, _ := regexp.MatchString(playersIndividualPlayer, path(r)); match {
+		player := playerName(r)
+
+		score := p.PlayerStore.GetPlayerScore(player)
+		if score == 0 {
+			w.WriteHeader(http.StatusNotFound)
+		} else {
+			w.WriteHeader(http.StatusOK)
+		}
+
+		fmt.Fprint(w, score)
+	} else if match, _ := regexp.MatchString(league, path(r)); match {
 		w.WriteHeader(http.StatusOK)
 	}
 
-	fmt.Fprint(w, score)
 }
 
 func playerName(r *http.Request) (player string) {

@@ -45,6 +45,10 @@ func TestRecordWin(t *testing.T) {
 	})
 }
 
+//------------------------------------
+// Endpoint: GET /players/:playerName
+//------------------------------------
+
 func TestGETPlayers(t *testing.T) {
 	store := StubPlayerStore{scores: map[string]int{
 		"Pepper": 20,
@@ -81,6 +85,10 @@ func TestGETPlayers(t *testing.T) {
 		assertStatus(t, response.Code, http.StatusNotFound)
 	})
 }
+
+//------------------------------------
+// Endpoint: POST /players/:playerName
+//------------------------------------
 
 func TestStoreWins(t *testing.T) {
 	t.Run("it returns accepted on POST", func(t *testing.T) {
@@ -123,6 +131,28 @@ func TestStoreWins(t *testing.T) {
 		}
 	})
 }
+
+//------------------------------------
+// Endpoint: GET /league
+//------------------------------------
+
+func TestLeague(t *testing.T) {
+	t.Run("it returns 200 on /league", func(t *testing.T) {
+		request, _ := http.NewRequest(http.MethodGet, "/league", nil)
+		response := httptest.NewRecorder()
+		store := StubPlayerStore{}
+
+		server := v1.PlayerServer{PlayerStore: &store}
+
+		server.ServeHTTP(response, request)
+
+		assertStatus(t, response.Code, http.StatusOK)
+	})
+}
+
+//------------------------------------
+// test helper methods
+//------------------------------------
 
 func assertResponseBody(t *testing.T, got, want string) {
 	t.Helper()
