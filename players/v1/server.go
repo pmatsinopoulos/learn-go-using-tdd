@@ -3,7 +3,6 @@ package v1
 import (
 	"fmt"
 	"net/http"
-	"regexp"
 	"strings"
 )
 
@@ -12,57 +11,41 @@ type PlayerServer struct {
 }
 
 func (p PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		p.handlePOST(w, r)
-	case http.MethodGet:
-		p.handleGET(w, r)
-	}
+	router := http.NewServeMux()
+	router.Handle("/league", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	router.Handle("/players/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			p.handlePOSTRecordWin(w, r)
+		case http.MethodGet:
+			p.handleGETPlayerScore(w, r)
+		}
+	}))
+
+	router.ServeHTTP(w, r)
 }
 
-func (p PlayerServer) handlePOST(w http.ResponseWriter, r *http.Request) {
+func (p PlayerServer) handlePOSTRecordWin(w http.ResponseWriter, r *http.Request) {
 	player := playerName(r)
 
 	w.WriteHeader(http.StatusAccepted)
 	p.PlayerStore.RecordWin(player)
 }
 
-type allowedPath string
+func (p PlayerServer) handleGETPlayerScore(w http.ResponseWriter, r *http.Request) {
+	player := playerName(r)
 
-func (ap allowedPath) String() string {
-	switch ap {
-	case league:
-		return "/league"
-	case playersIndividualPlayer:
-		return "/players/"
-	}
-	return "unknown"
-}
-
-const (
-	league                  allowedPath = "/league"
-	playersIndividualPlayer allowedPath = "/players/"
-)
-
-func path(r *http.Request) string {
-	return r.URL.Path
-}
-
-func (p PlayerServer) handleGET(w http.ResponseWriter, r *http.Request) {
-	if match, _ := regexp.MatchString(string(playersIndividualPlayer), path(r)); match {
-		player := playerName(r)
-
-		score := p.PlayerStore.GetPlayerScore(player)
-		if score == 0 {
-			w.WriteHeader(http.StatusNotFound)
-		} else {
-			w.WriteHeader(http.StatusOK)
-		}
-
-		fmt.Fprint(w, score)
-	} else if match, _ := regexp.MatchString(string(league), path(r)); match {
+	score := p.PlayerStore.GetPlayerScore(player)
+	if score == 0 {
+		w.WriteHeader(http.StatusNotFound)
+	} else {
 		w.WriteHeader(http.StatusOK)
 	}
+
+	fmt.Fprint(w, score)
 
 }
 
