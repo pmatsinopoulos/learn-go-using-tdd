@@ -10,20 +10,28 @@ type PlayerServer struct {
 	PlayerStore PlayerStore
 }
 
-func (p PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	router := http.NewServeMux()
-	router.Handle("/league", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func (p PlayerServer) leagueHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-	}))
+	}
+}
 
-	router.Handle("/players/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func (p PlayerServer) playersHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
 			p.handlePOSTRecordWin(w, r)
 		case http.MethodGet:
 			p.handleGETPlayerScore(w, r)
 		}
-	}))
+	}
+}
+
+func (p PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	router := http.NewServeMux()
+	router.Handle("/league", p.leagueHandler())
+
+	router.Handle("/players/", p.playersHandler())
 
 	router.ServeHTTP(w, r)
 }
