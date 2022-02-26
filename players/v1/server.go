@@ -8,7 +8,29 @@ import (
 
 type PlayerServer struct {
 	PlayerStore PlayerStore
+	router      *http.ServeMux
 }
+
+// PlayerServer Factory function
+
+func NewPlayerServer(store PlayerStore) PlayerServer {
+	p := PlayerServer{
+		PlayerStore: store,
+		router:      http.NewServeMux(),
+	}
+	p.router.Handle("/league", p.leagueHandler())
+
+	p.router.Handle("/players/", p.playersHandler())
+	return p
+}
+
+// public methods
+
+func (p PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	p.router.ServeHTTP(w, r)
+}
+
+// private methods
 
 func (p PlayerServer) leagueHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -25,15 +47,6 @@ func (p PlayerServer) playersHandler() http.HandlerFunc {
 			p.handleGETPlayerScore(w, r)
 		}
 	}
-}
-
-func (p PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	router := http.NewServeMux()
-	router.Handle("/league", p.leagueHandler())
-
-	router.Handle("/players/", p.playersHandler())
-
-	router.ServeHTTP(w, r)
 }
 
 func (p PlayerServer) handlePOSTRecordWin(w http.ResponseWriter, r *http.Request) {
