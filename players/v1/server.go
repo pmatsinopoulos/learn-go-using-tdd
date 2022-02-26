@@ -7,27 +7,25 @@ import (
 )
 
 type PlayerServer struct {
-	PlayerStore PlayerStore
-	router      *http.ServeMux
+	PlayerStore  PlayerStore
+	http.Handler // embedding
 }
 
 // PlayerServer Factory function
 
-func NewPlayerServer(store PlayerStore) PlayerServer {
-	p := PlayerServer{
-		PlayerStore: store,
-		router:      http.NewServeMux(),
-	}
-	p.router.Handle("/league", p.leagueHandler())
+func NewPlayerServer(store PlayerStore) *PlayerServer {
+	p := new(PlayerServer)
+	p.PlayerStore = store
 
-	p.router.Handle("/players/", p.playersHandler())
+	router := http.NewServeMux()
+
+	router.Handle("/league", p.leagueHandler())
+
+	router.Handle("/players/", p.playersHandler())
+
+	p.Handler = router
+
 	return p
-}
-
-// public methods
-
-func (p PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p.router.ServeHTTP(w, r)
 }
 
 // private methods
