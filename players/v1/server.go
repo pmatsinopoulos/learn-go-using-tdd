@@ -32,8 +32,11 @@ func NewPlayerServer(store PlayerStore) *PlayerServer {
 
 // private methods
 
+const contentTypeApplicationJson = "application/json"
+
 func (p PlayerServer) leagueHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("content-type", contentTypeApplicationJson)
 		json.NewEncoder(w).Encode(p.getLeagueTable())
 	}
 }

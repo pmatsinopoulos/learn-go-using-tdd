@@ -161,6 +161,10 @@ func TestLeague(t *testing.T) {
 		assertLeague(t, response, store)
 
 		assertStatus(t, response.Code, http.StatusOK)
+
+		if response.Result().Header.Get("content-type") != "application/json" {
+			t.Errorf("response needs to have the header 'Content-Type'")
+		}
 	})
 }
 
