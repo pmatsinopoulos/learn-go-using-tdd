@@ -39,9 +39,7 @@ func (p PlayerServer) leagueHandler() http.HandlerFunc {
 }
 
 func (p PlayerServer) getLeagueTable() []serializers.Player {
-	return []serializers.Player{
-		{Name: "Chris", Wins: 20},
-	}
+	return p.PlayerStore.GetLeague()
 }
 
 func (p PlayerServer) playersHandler() http.HandlerFunc {

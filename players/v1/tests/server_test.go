@@ -7,12 +7,18 @@ import (
 	"github.com/pmatsinopoulos/players/v1/serializers"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 )
 
 type StubPlayerStore struct {
 	scores   map[string]int
 	winCalls []string
+	league   []serializers.Player
+}
+
+func (s *StubPlayerStore) GetLeague() []serializers.Player {
+	return s.league
 }
 
 func (s *StubPlayerStore) GetPlayerScore(name string) int {
@@ -142,17 +148,17 @@ func TestLeague(t *testing.T) {
 	t.Run("it returns 200 on /league", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/league", nil)
 		response := httptest.NewRecorder()
-		store := StubPlayerStore{}
+		store := StubPlayerStore{
+			league: []serializers.Player{
+				{Name: "Peter", Wins: 10},
+			},
+		}
 
 		server := v1.NewPlayerServer(&store)
 
 		server.ServeHTTP(response, request)
 
-		var got []serializers.Player
-
-		if err := json.NewDecoder(response.Body).Decode(&got); err != nil {
-			t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", response.Body, err)
-		}
+		assertLeague(t, response, store)
 
 		assertStatus(t, response.Code, http.StatusOK)
 	})
@@ -180,6 +186,22 @@ func assertStatus(t *testing.T, got, want int) {
 	t.Helper()
 
 	if got != want {
+		t.Errorf("Expected %v, got %v", want, got)
+	}
+}
+
+func assertLeague(t *testing.T, response *httptest.ResponseRecorder, store StubPlayerStore) {
+	t.Helper()
+
+	var got []serializers.Player
+
+	if err := json.NewDecoder(response.Body).Decode(&got); err != nil {
+		t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", response.Body, err)
+	}
+
+	want := store.league
+
+	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Expected %v, got %v", want, got)
 	}
 }
