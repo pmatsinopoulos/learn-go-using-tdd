@@ -1,7 +1,19 @@
 package v1
 
+import "github.com/pmatsinopoulos/players/v1/serializers"
+
 type InMemoryPlayerStore struct {
 	store map[string]int
+}
+
+func (i *InMemoryPlayerStore) GetLeague() []serializers.Player {
+	result := make([]serializers.Player, 0, len(i.store))
+
+	for player, wins := range i.store {
+		result = append(result, serializers.Player{Name: player, Wins: wins})
+	}
+
+	return result
 }
 
 func (i *InMemoryPlayerStore) GetPlayerScore(name string) int {
@@ -13,5 +25,7 @@ func (i *InMemoryPlayerStore) RecordWin(name string) {
 }
 
 func NewInMemoryPlayerStore() *InMemoryPlayerStore {
-	return &InMemoryPlayerStore{map[string]int{}}
+	return &InMemoryPlayerStore{
+		store: map[string]int{},
+	}
 }
