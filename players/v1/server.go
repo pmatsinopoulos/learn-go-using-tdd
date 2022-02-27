@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/pmatsinopoulos/players/v1/serializers"
 	"net/http"
 	"strings"
 )
@@ -32,7 +34,11 @@ func NewPlayerServer(store PlayerStore) *PlayerServer {
 
 func (p PlayerServer) leagueHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
+		leagueTable := []serializers.Player{
+			{Name: "Chris", Wins: 20},
+		}
+
+		json.NewEncoder(w).Encode(leagueTable)
 	}
 }
 
