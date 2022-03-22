@@ -11,13 +11,19 @@ type FileSystemPlayerStore struct {
 	Database io.Reader
 }
 
-func (fsps FileSystemPlayerStore) GetLeague() []serializers.Player {
+func NewLeague(rdr io.Reader) ([]serializers.Player, error) {
 	var result []serializers.Player
 
-	error := json.NewDecoder(fsps.Database).Decode(&result)
+	err := json.NewDecoder(rdr).Decode(&result)
 
-	if error != nil {
-		log.Panicf("Error decoding database content: %v", error)
+	return result, err
+}
+
+func (fsps FileSystemPlayerStore) GetLeague() []serializers.Player {
+	var result, err = NewLeague(fsps.Database)
+
+	if err != nil {
+		log.Panicf("Error decoding database content: %v", err)
 	}
 
 	return result
