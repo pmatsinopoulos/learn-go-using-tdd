@@ -8,7 +8,7 @@ import (
 )
 
 type FileSystemPlayerStore struct {
-	Database io.Reader
+	Database io.ReadSeeker
 }
 
 func NewLeague(rdr io.Reader) ([]serializers.Player, error) {
@@ -20,6 +20,8 @@ func NewLeague(rdr io.Reader) ([]serializers.Player, error) {
 }
 
 func (fsps FileSystemPlayerStore) GetLeague() []serializers.Player {
+	fsps.Database.Seek(0, 0)
+
 	var result, err = NewLeague(fsps.Database)
 
 	if err != nil {
