@@ -30,6 +30,22 @@ func TestFileSystemPlayerStore(t *testing.T) {
 
 		assertLeagueMatching(t, got, want)
 	})
+
+	t.Run("get player score", func(t *testing.T) {
+		database := strings.NewReader(`
+          [{"Name": "Cleo", "Wins": 10},
+           {"Name": "Chris", "Wins": 33}]
+        `)
+
+		store := v1.FileSystemPlayerStore{Database: database}
+
+		got := store.GetPlayerScore("Chris")
+
+		want := 33
+		if got != want {
+			t.Errorf("Expected %v, got %v", want, got)
+		}
+	})
 }
 
 func assertLeagueMatching(t *testing.T, got []serializers.Player, want []serializers.Player) {

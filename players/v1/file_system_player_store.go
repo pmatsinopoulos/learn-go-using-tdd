@@ -30,3 +30,14 @@ func (fsps FileSystemPlayerStore) GetLeague() []serializers.Player {
 
 	return result
 }
+
+func (fsps FileSystemPlayerStore) GetPlayerScore(playerName string) int {
+	var playerScores, _ = NewLeague(fsps.Database)
+
+	for _, player := range playerScores {
+		if player.Name == playerName {
+			return player.Wins
+		}
+	}
+	return -1
+}
