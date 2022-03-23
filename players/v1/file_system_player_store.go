@@ -41,3 +41,17 @@ func (fsps FileSystemPlayerStore) GetPlayerScore(playerName string) int {
 	}
 	return -1
 }
+
+func (fsps FileSystemPlayerStore) RecordWin(playerName string) {
+	playerStats := fsps.GetLeague()
+
+	for index, player := range playerStats {
+		if player.Name == playerName {
+			playerStats[index].Wins++
+		}
+	}
+
+	fsps.Database.Seek(0, 0)
+	json.NewEncoder(fsps.Database).Encode(playerStats)
+	fsps.Database.Seek(0, 0)
+}
