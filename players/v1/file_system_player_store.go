@@ -8,7 +8,7 @@ import (
 )
 
 type FileSystemPlayerStore struct {
-	Database io.ReadSeeker
+	Database io.ReadWriteSeeker
 }
 
 func NewLeague(rdr io.Reader) ([]serializers.Player, error) {
