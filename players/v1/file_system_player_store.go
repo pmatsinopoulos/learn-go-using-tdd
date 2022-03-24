@@ -33,22 +33,20 @@ func (fsps FileSystemPlayerStore) GetLeague() League {
 func (fsps FileSystemPlayerStore) GetPlayerScore(playerName string) int {
 	var playerScores, _ = NewLeague(fsps.Database)
 
-	for _, player := range playerScores {
-		if player.Name == playerName {
-			return player.Wins
-		}
+	player := playerScores.Find(playerName)
+	if player != nil {
+		return player.Wins
 	}
+
 	return -1
 }
 
 func (fsps FileSystemPlayerStore) RecordWin(playerName string) {
 	playerStats := fsps.GetLeague()
 
-	for index, player := range playerStats {
-		if player.Name == playerName {
-			playerStats[index].Wins++
-		}
-	}
+	player := playerStats.Find(playerName)
+
+	player.Wins++
 
 	fsps.Database.Seek(0, 0)
 	json.NewEncoder(fsps.Database).Encode(playerStats)
