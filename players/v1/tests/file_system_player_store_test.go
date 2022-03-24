@@ -2,7 +2,6 @@ package tests
 
 import (
 	v1 "github.com/pmatsinopoulos/players/v1"
-	"github.com/pmatsinopoulos/players/v1/serializers"
 	"io"
 	"io/ioutil"
 	"os"
@@ -22,7 +21,7 @@ func TestFileSystemPlayerStore(t *testing.T) {
 
 		got := store.GetLeague()
 
-		want := []serializers.Player{
+		want := v1.League{
 			{"Cleo", 10},
 			{"Chris", 33},
 		}
@@ -70,7 +69,7 @@ func TestFileSystemPlayerStore(t *testing.T) {
 // ---------------------------------
 // Helper Functions
 
-func assertLeagueMatching(t *testing.T, got []serializers.Player, want []serializers.Player) {
+func assertLeagueMatching(t *testing.T, got v1.League, want v1.League) {
 	t.Helper()
 
 	if !reflect.DeepEqual(got, want) {

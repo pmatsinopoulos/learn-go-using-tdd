@@ -3,7 +3,6 @@ package v1
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pmatsinopoulos/players/v1/serializers"
 	"net/http"
 	"strings"
 )
@@ -41,7 +40,7 @@ func (p PlayerServer) leagueHandler() http.HandlerFunc {
 	}
 }
 
-func (p PlayerServer) getLeagueTable() []serializers.Player {
+func (p PlayerServer) getLeagueTable() League {
 	return p.PlayerStore.GetLeague()
 }
 

@@ -2,7 +2,6 @@ package v1
 
 import (
 	"encoding/json"
-	"github.com/pmatsinopoulos/players/v1/serializers"
 	"io"
 	"log"
 )
@@ -11,15 +10,15 @@ type FileSystemPlayerStore struct {
 	Database io.ReadWriteSeeker
 }
 
-func NewLeague(rdr io.Reader) ([]serializers.Player, error) {
-	var result []serializers.Player
+func NewLeague(rdr io.Reader) (League, error) {
+	var result League
 
 	err := json.NewDecoder(rdr).Decode(&result)
 
 	return result, err
 }
 
-func (fsps FileSystemPlayerStore) GetLeague() []serializers.Player {
+func (fsps FileSystemPlayerStore) GetLeague() League {
 	fsps.Database.Seek(0, 0)
 
 	var result, err = NewLeague(fsps.Database)

@@ -3,7 +3,6 @@ package tests
 import (
 	"encoding/json"
 	v1 "github.com/pmatsinopoulos/players/v1"
-	"github.com/pmatsinopoulos/players/v1/serializers"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -47,11 +46,11 @@ func TestRecordingWinsAndGettingLeague(t *testing.T) {
 
 	server.ServeHTTP(response, request)
 
-	var got []serializers.Player
+	var got v1.League
 
 	json.NewDecoder(response.Body).Decode(&got)
 
-	want := []serializers.Player{
+	want := v1.League{
 		{Name: "Peter", Wins: 3},
 		{Name: "Sam", Wins: 4},
 	}

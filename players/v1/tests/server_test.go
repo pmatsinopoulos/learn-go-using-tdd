@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/pmatsinopoulos/players/v1"
-	"github.com/pmatsinopoulos/players/v1/serializers"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -14,10 +13,10 @@ import (
 type StubPlayerStore struct {
 	scores   map[string]int
 	winCalls []string
-	league   []serializers.Player
+	league   v1.League
 }
 
-func (s *StubPlayerStore) GetLeague() []serializers.Player {
+func (s *StubPlayerStore) GetLeague() v1.League {
 	return s.league
 }
 
@@ -149,7 +148,7 @@ func TestLeague(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/league", nil)
 		response := httptest.NewRecorder()
 		store := StubPlayerStore{
-			league: []serializers.Player{
+			league: v1.League{
 				{Name: "Peter", Wins: 10},
 			},
 		}
@@ -197,7 +196,7 @@ func assertStatus(t *testing.T, got, want int) {
 func assertLeague(t *testing.T, response *httptest.ResponseRecorder, store StubPlayerStore) {
 	t.Helper()
 
-	var got []serializers.Player
+	var got v1.League
 
 	if err := json.NewDecoder(response.Body).Decode(&got); err != nil {
 		t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", response.Body, err)

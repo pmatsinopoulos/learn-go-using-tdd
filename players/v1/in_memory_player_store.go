@@ -6,8 +6,8 @@ type InMemoryPlayerStore struct {
 	store map[string]int
 }
 
-func (i *InMemoryPlayerStore) GetLeague() []serializers.Player {
-	result := make([]serializers.Player, 0, len(i.store))
+func (i *InMemoryPlayerStore) GetLeague() League {
+	result := make(League, 0, len(i.store))
 
 	for player, wins := range i.store {
 		result = append(result, serializers.Player{Name: player, Wins: wins})
