@@ -15,6 +15,9 @@ func NewLeague(rdr io.Reader) (League, error) {
 	var result League
 
 	err := json.NewDecoder(rdr).Decode(&result)
+	if err == io.EOF {
+		return League{}, nil
+	}
 
 	return result, err
 }
@@ -52,7 +55,7 @@ func (fsps FileSystemPlayerStore) RecordWin(playerName string) {
 	} else {
 		player.Wins++
 	}
-	
+
 	fsps.Database.Seek(0, 0)
 	json.NewEncoder(fsps.Database).Encode(playerStats)
 	fsps.Database.Seek(0, 0)
