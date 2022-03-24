@@ -2,6 +2,7 @@ package v1
 
 import (
 	"encoding/json"
+	"github.com/pmatsinopoulos/players/v1/serializers"
 	"io"
 	"log"
 )
@@ -46,8 +47,12 @@ func (fsps FileSystemPlayerStore) RecordWin(playerName string) {
 
 	player := playerStats.Find(playerName)
 
-	player.Wins++
-
+	if player == nil {
+		playerStats = append(playerStats, serializers.Player{Name: playerName, Wins: 1})
+	} else {
+		player.Wins++
+	}
+	
 	fsps.Database.Seek(0, 0)
 	json.NewEncoder(fsps.Database).Encode(playerStats)
 	fsps.Database.Seek(0, 0)
