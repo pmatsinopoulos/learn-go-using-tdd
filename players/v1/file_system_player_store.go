@@ -35,6 +35,8 @@ func (fsps FileSystemPlayerStore) GetLeague() League {
 }
 
 func (fsps FileSystemPlayerStore) GetPlayerScore(playerName string) int {
+	fsps.Database.Seek(0, 0)
+
 	var playerScores, _ = NewLeague(fsps.Database)
 
 	player := playerScores.Find(playerName)
