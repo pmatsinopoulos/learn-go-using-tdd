@@ -12,7 +12,7 @@ import (
 func TestRecordingWinsAndRetrievingThem(t *testing.T) {
 	database, cleanDatabase := createTempFile(t, "[]")
 	defer cleanDatabase()
-	store := v1.FileSystemPlayerStore{Database: database}
+	store := v1.NewFileSystemPlayerStore(database)
 
 	server := v1.NewPlayerServer(store)
 	player := "Pepper"
@@ -30,7 +30,7 @@ func TestRecordingWinsAndRetrievingThem(t *testing.T) {
 func TestRecordingWinsAndGettingLeague(t *testing.T) {
 	database, cleanDatabase := createTempFile(t, "[]")
 	defer cleanDatabase()
-	store := v1.FileSystemPlayerStore{Database: database}
+	store := v1.NewFileSystemPlayerStore(database)
 	server := v1.NewPlayerServer(store)
 
 	player := "Peter"

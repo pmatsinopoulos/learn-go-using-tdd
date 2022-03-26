@@ -4,11 +4,21 @@ import (
 	"encoding/json"
 	"github.com/pmatsinopoulos/players/v1/serializers"
 	"io"
-	"log"
 )
 
 type FileSystemPlayerStore struct {
 	Database io.ReadWriteSeeker
+	league   League
+}
+
+func NewFileSystemPlayerStore(database io.ReadWriteSeeker) *FileSystemPlayerStore {
+	database.Seek(0, 0)
+	league, _ := NewLeague(database)
+
+	return &FileSystemPlayerStore{
+		Database: database,
+		league:   league,
+	}
 }
 
 func NewLeague(rdr io.Reader) (League, error) {
@@ -23,23 +33,11 @@ func NewLeague(rdr io.Reader) (League, error) {
 }
 
 func (fsps FileSystemPlayerStore) GetLeague() League {
-	fsps.Database.Seek(0, 0)
-
-	var result, err = NewLeague(fsps.Database)
-
-	if err != nil {
-		log.Panicf("Error decoding database content: %v", err)
-	}
-
-	return result
+	return fsps.league
 }
 
 func (fsps FileSystemPlayerStore) GetPlayerScore(playerName string) int {
-	fsps.Database.Seek(0, 0)
-
-	var playerScores, _ = NewLeague(fsps.Database)
-
-	player := playerScores.Find(playerName)
+	player := fsps.league.Find(playerName)
 	if player != nil {
 		return player.Wins
 	}
@@ -47,18 +45,15 @@ func (fsps FileSystemPlayerStore) GetPlayerScore(playerName string) int {
 	return -1
 }
 
-func (fsps FileSystemPlayerStore) RecordWin(playerName string) {
-	playerStats := fsps.GetLeague()
-
-	player := playerStats.Find(playerName)
+func (fsps *FileSystemPlayerStore) RecordWin(playerName string) {
+	player := fsps.league.Find(playerName)
 
 	if player == nil {
-		playerStats = append(playerStats, serializers.Player{Name: playerName, Wins: 1})
+		fsps.league = append(fsps.league, serializers.Player{Name: playerName, Wins: 1})
 	} else {
 		player.Wins++
 	}
 
 	fsps.Database.Seek(0, 0)
-	json.NewEncoder(fsps.Database).Encode(playerStats)
-	fsps.Database.Seek(0, 0)
+	json.NewEncoder(fsps.Database).Encode(fsps.league)
 }
