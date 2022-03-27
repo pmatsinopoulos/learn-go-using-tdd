@@ -2,7 +2,6 @@ package tests
 
 import (
 	v1 "github.com/pmatsinopoulos/players/v1"
-	"io"
 	"io/ioutil"
 	"os"
 	"reflect"
@@ -106,7 +105,7 @@ func assertLeagueMatching(t *testing.T, got v1.League, want v1.League) {
 	}
 }
 
-func createTempFile(t testing.TB, initialData string) (io.ReadWriteSeeker, func()) {
+func createTempFile(t testing.TB, initialData string) (*os.File, func()) {
 	t.Helper()
 
 	tempFile, err := ioutil.TempFile("", "db")

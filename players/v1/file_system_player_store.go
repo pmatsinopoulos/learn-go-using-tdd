@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/pmatsinopoulos/players/v1/serializers"
 	"io"
+	"os"
 )
 
 type FileSystemPlayerStore struct {
@@ -11,12 +12,12 @@ type FileSystemPlayerStore struct {
 	league   League
 }
 
-func NewFileSystemPlayerStore(database io.ReadWriteSeeker) *FileSystemPlayerStore {
+func NewFileSystemPlayerStore(database *os.File) *FileSystemPlayerStore {
 	database.Seek(0, 0)
 	league, _ := newLeague(database)
 
 	return &FileSystemPlayerStore{
-		Database: &tape{file: database},
+		Database: &Tape{File: database},
 		league:   league,
 	}
 }
