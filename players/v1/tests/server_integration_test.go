@@ -12,7 +12,8 @@ import (
 func TestRecordingWinsAndRetrievingThem(t *testing.T) {
 	database, cleanDatabase := createTempFile(t, "[]")
 	defer cleanDatabase()
-	store := v1.NewFileSystemPlayerStore(database)
+	store, err := v1.NewFileSystemPlayerStore(database)
+	assertNoError(t, err)
 
 	server := v1.NewPlayerServer(store)
 	player := "Pepper"
@@ -30,7 +31,9 @@ func TestRecordingWinsAndRetrievingThem(t *testing.T) {
 func TestRecordingWinsAndGettingLeague(t *testing.T) {
 	database, cleanDatabase := createTempFile(t, "[]")
 	defer cleanDatabase()
-	store := v1.NewFileSystemPlayerStore(database)
+	store, err := v1.NewFileSystemPlayerStore(database)
+	assertNoError(t, err)
+
 	server := v1.NewPlayerServer(store)
 
 	player := "Peter"

@@ -16,7 +16,8 @@ func TestFileSystemPlayerStore(t *testing.T) {
         ]`)
 		defer cleanDatabase()
 
-		store := v1.NewFileSystemPlayerStore(database)
+		store, err := v1.NewFileSystemPlayerStore(database)
+		assertNoError(t, err)
 
 		got := store.GetLeague()
 
@@ -39,7 +40,8 @@ func TestFileSystemPlayerStore(t *testing.T) {
         `)
 		defer cleanDatabase()
 
-		store := v1.NewFileSystemPlayerStore(database)
+		store, err := v1.NewFileSystemPlayerStore(database)
+		assertNoError(t, err)
 
 		got := store.GetPlayerScore("Chris")
 
@@ -59,7 +61,8 @@ func TestFileSystemPlayerStore(t *testing.T) {
         `)
 		defer cleanDatabase()
 
-		store := v1.NewFileSystemPlayerStore(database)
+		store, err := v1.NewFileSystemPlayerStore(database)
+		assertNoError(t, err)
 
 		store.RecordWin("Chris")
 
@@ -77,7 +80,8 @@ func TestFileSystemPlayerStore(t *testing.T) {
         `)
 		defer cleanDatabase()
 
-		store := v1.NewFileSystemPlayerStore(database)
+		store, err := v1.NewFileSystemPlayerStore(database)
+		assertNoError(t, err)
 
 		// fire
 		store.RecordWin("Panos")
@@ -131,5 +135,13 @@ func assertScoreEquals(t testing.TB, got, want int) {
 
 	if got != want {
 		t.Errorf("Expected %v, got %v", want, got)
+	}
+}
+
+func assertNoError(t testing.TB, err error) {
+	t.Helper()
+
+	if err != nil {
+		t.Fatalf("error: %v", err)
 	}
 }

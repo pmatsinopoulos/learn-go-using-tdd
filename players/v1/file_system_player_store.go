@@ -2,6 +2,7 @@ package v1
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/pmatsinopoulos/players/v1/serializers"
 	"io"
 	"os"
@@ -12,14 +13,18 @@ type FileSystemPlayerStore struct {
 	league   League
 }
 
-func NewFileSystemPlayerStore(file *os.File) *FileSystemPlayerStore {
+func NewFileSystemPlayerStore(file *os.File) (*FileSystemPlayerStore, error) {
 	file.Seek(0, 0)
-	league, _ := newLeague(file)
+	league, err := newLeague(file)
+
+	if err != nil {
+		return nil, fmt.Errorf("problem loadking player store from file %s, error: %v", file.Name(), err)
+	}
 
 	return &FileSystemPlayerStore{
 		Database: json.NewEncoder(&Tape{File: file}),
 		league:   league,
-	}
+	}, nil
 }
 
 func newLeague(rdr io.Reader) (League, error) {
