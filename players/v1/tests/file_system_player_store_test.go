@@ -96,6 +96,22 @@ func TestFileSystemPlayerStore(t *testing.T) {
 
 		assertScoreEquals(t, found.Wins, 1)
 	})
+
+	t.Run("works with an empty file - having a blank string inside", func(t *testing.T) {
+		database, cleandatabase := createTempFile(t, "")
+		defer cleandatabase()
+
+		_, err := v1.NewFileSystemPlayerStore(database)
+		assertNoError(t, err)
+	})
+
+	t.Run("works with an empty file - having a blank array inside", func(t *testing.T) {
+		database, cleandatabase := createTempFile(t, "[]")
+		defer cleandatabase()
+
+		_, err := v1.NewFileSystemPlayerStore(database)
+		assertNoError(t, err)
+	})
 }
 
 // ---------------------------------
