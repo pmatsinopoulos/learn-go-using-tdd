@@ -59,8 +59,8 @@ func TestRecordingWinsAndGettingLeague(t *testing.T) {
 	json.NewDecoder(response.Body).Decode(&got)
 
 	want := v1.League{
-		{Name: "Peter", Wins: 3},
 		{Name: "Sam", Wins: 4},
+		{Name: "Peter", Wins: 3},
 	}
 	if !reflect.DeepEqual(want, got) {
 		t.Errorf("Expected %v, got %v", want, got)

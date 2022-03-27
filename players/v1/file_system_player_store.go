@@ -6,6 +6,7 @@ import (
 	"github.com/pmatsinopoulos/players/v1/serializers"
 	"io"
 	"os"
+	"sort"
 )
 
 type FileSystemPlayerStore struct {
@@ -39,6 +40,9 @@ func newLeague(rdr io.Reader) (League, error) {
 }
 
 func (fsps FileSystemPlayerStore) GetLeague() League {
+	sort.Slice(fsps.league, func(i, j int) bool {
+		return fsps.league[i].Wins > fsps.league[j].Wins
+	})
 	return fsps.league
 }
 
